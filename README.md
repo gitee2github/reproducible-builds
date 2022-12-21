@@ -1,37 +1,53 @@
-# reproducible-builds
+# reproducibleopeneuler
+These tools are intended to make it easier to verify that the binaries resulting from openEuler builds are reproducible.
 
-#### 介绍
-The repository for reproducible builds SIG
+For this, we rebuild twice locally from source with variations in
 
-#### 软件架构
-软件架构说明
+* datetime
+* hostname
 
+within opensource libfaketime in Open Build Service(OBS),
+unpack the differenc packages and compare the results using the build-compare script (diffoscope) that abstracts away some unavoidable (or unimportant) differences.
 
-#### 安装教程
+Steps:  
+1. Install libfaketime：  
+get libfaketime source https://github.com/opensourceways/reproducible-builds-libfaketime  
+```
+make
+make install
+```
+2. To mock datetime and hostname, set the libfaketime environment  
+```
+echo 'export LD_PRELOAD=/usr/local/lib/faketime/libfaketimeMT.so.1' >> /etc/profile
+echo 'export FAKETIME="2022-05-01 11:12:13"' >> /etc/profile
+echo 'export FAKEHOSTNAME=fakename' >> /etc/profile
+```
+3. Solve the binary differences caused by time & random numbers in Python during the compilation of source packages  
+```
+echo 'export SOURCE_DATE_EPOCH=1' >> /etc/profile  
+echo 'export PYTHONHASHSEED=0' >> /etc/profile  
+```
+4. We added a blacklist and whitelist mechanism to libfaketime, In blacklist mode, libfaketime only hooks commands in the blacklist; In white list mode, libfaketime will skip the commands in the white list and hook all other commands.
+   Users can use the blacklist or whitelist function by downloading the corresponding branch. For example:
+```
+# blacklist mode
+export BLACKLIST=ls,make
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+# whitelist mode
+export WHITELIST=ls,make
+```
+5. In OBS, the hostname used in the build will be entered into the rpm package and the two builds will be inconsistent. Therefore, we also integrate the function of hooking hostname in libfaketime.This function is currently integrated in the whitelist branch.
+```
+export FAKENAME=fakename
+```
+6. OBS rebuild packages twice locally from software source
+7. Unpack your two packages using the unpacker.py tool  
+```
+python unpacker.py ${first package path} ${second package path}
+```
+8. Display differences using diffoscope : 
+```
+yum install diffoscope  
+diffoscope ${first file path} ${second file path} --html diff.html
+```
 
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
