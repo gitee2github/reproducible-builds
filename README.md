@@ -1,6 +1,16 @@
+
+# 整体实现方案和指导书参考：
+
+* 可重复构建业界洞察
+* 可重复构建openEuler实践
+* 相关辅助工具的原理
+* 进展&可重复构建度量看板
+* 出现不一致情况下的差异分析案例
+https://gitee.com/openeuler/reproducible-builds/tree/master/docs
+
+
 # reproducibleopeneuler
 可重复构建sig组通过一系列开源工具，使openEuler构建的软件能达到可重复构建的目标。
-
 为此，我们在执行两次Open Build Service(OBS)重复构建时，主要打桩了以下两个参数，使用的开源软件是libfaketime ：  
 
 * datetime
@@ -49,4 +59,9 @@ python unpacker.py ${first package path} ${second package path}
 yum install diffoscope  
 diffoscope ${first file path} ${second file path} --html diff.html
 ```
+
+# 其它参考链接：
+
+* openEuler可重复构建看板： https://reproducible-builds.openeuler.org/
+备注：已加入reproducible-build社区
 
