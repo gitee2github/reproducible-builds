@@ -1,3 +1,11 @@
+# Reproducible Build Solution Reference:
+ * Reproducible build background and technology insight
+ * How to design and archive reproducibele build on openEuler operation system project
+ * Reproducible build tools principle 
+ * Reproducible build Dashboard
+ * The guidelines of How to resolve un-reproducible build problems
+ 
+
 # reproducibleopeneuler
 These tools are intended to make it easier to verify that the binaries resulting from openEuler builds are reproducible.
 
@@ -51,3 +59,5 @@ yum install diffoscope
 diffoscope ${first file path} ${second file path} --html diff.html
 ```
 
+# references link:
+openEuler reproducible-build dashboard : https://reproducible-builds.openeuler.org/
